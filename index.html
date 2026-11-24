@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#082b43"><meta name="description" content="Cádiz Fishing Predictor: predictor y diario de pesca para Cádiz.">
+<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+<title>Cádiz Fishing Predictor</title>
+</head>
+<body>
+<header class="top">
+ <div class="brandrow"><div class="logo">CFP<span>↗</span></div><div><b>CÁDIZ FISHING PREDICTOR</b><small>MAR · MAREA · PESCA</small></div></div>
+ <span class="live" id="dataState">MODO MANUAL</span>
+</header>
+<main>
+<section class="hero">
+ <div class="eyebrow">CENTRO DE PREDICCIÓN · CÁDIZ</div>
+ <h1>Encuentra tu próxima picada.</h1>
+ <p>Predicción orientativa por especie, modalidad, zona y condiciones.</p>
+ <div class="herofoot"><div><small>ÍNDICE DE ESCENARIO</small><div class="score"><strong id="bestScore">—</strong><span>/100</span></div></div><div class="heroresult"><b id="bestSpecies">Introduce condiciones</b><small id="bestSummary">El motor calculará tu mejor escenario.</small></div></div>
+ <div class="disclaimer">Estimación experimental. No representa una probabilidad estadística de captura ni sustituye avisos marítimos oficiales.</div>
+</section>
+
+<nav class="tabs">
+ <button class="tab active" data-tab="predict">Predicción</button><button class="tab" data-tab="zones">Mapa y zonas</button><button class="tab" data-tab="diary">Diario</button><button class="tab" data-tab="settings">Perfil</button>
+</nav>
+
+<section id="predict" class="panel active">
+ <div class="section-title"><div><small>01 / CONDICIONES</small><h2>Estado del escenario</h2></div><span class="chip">Ajustable</span></div>
+ <div class="grid2">
+  <label>Viento <span id="windOut">10 km/h</span><input id="wind" type="range" min="0" max="60" value="10"></label>
+  <label>Oleaje <span id="waveOut">0,5 m</span><input id="wave" type="range" min="0" max="4" step=".1" value=".5"></label>
+  <label>Periodo de ola <span id="periodOut">7 s</span><input id="period" type="range" min="2" max="16" value="7"></label>
+  <label>Corriente <span id="currentOut">0,2 m/s</span><input id="current" type="range" min="0" max="1.5" step=".05" value=".2"></label>
+  <label>Temperatura agua <span id="tempOut">18 °C</span><input id="temp" type="range" min="10" max="28" value="18"></label>
+  <label>Presión <span id="pressureOut">1015 hPa</span><input id="pressure" type="range" min="980" max="1040" value="1015"></label>
+ </div>
+ <div class="fieldrow"><label>Movimiento de marea<select id="tide"><option value="rising">Subiendo</option><option value="falling">Bajando</option><option value="slack">Parada / repunte</option></select></label><label>Tendencia de presión<select id="trend"><option value="stable">Estable</option><option value="rising">Subiendo</option><option value="falling">Bajando</option></select></label></div>
+ <div class="fieldrow"><label>Momento del día<select id="time"><option value="dawn">Amanecer</option><option value="morning">Mañana</option><option value="midday">Mediodía</option><option value="dusk">Atardecer</option><option value="night">Noche</option></select></label><label>Modalidad<select id="method"><option>Todas las modalidades</option><option>Surfcasting</option><option>Spinning</option><option>Boya</option><option>Pesca a fondo</option><option>Kayak</option><option>Embarcación</option></select></label></div>
+ <button class="primary full" id="calculate">Calcular escenario</button>
+ <div class="section-title"><div><small>02 / RESULTADOS</small><h2>Índice por especie</h2></div><span class="muted">0–100</span></div>
+ <div id="speciesResults" class="results"></div>
+ <div class="section-title"><div><small>03 / MEJORES COINCIDENCIAS</small><h2>Zona recomendada</h2></div></div>
+ <div id="recommendations" class="recommendations"></div>
+ <div class="note"><b>Cómo leer el índice:</b> combina afinidad ambiental estimada, hábitat y modalidad. Los pesos son reglas iniciales configurables, no han sido calibrados con un histórico local de capturas.</div>
+</section>
+
+<section id="zones" class="panel">
+ <div class="section-title"><div><small>04 / GEOGRAFÍA</small><h2>Zonas de referencia</h2></div><span class="chip">Radio inicial 15 km</span></div>
+ <p class="muted">Ubicaciones candidatas de Cádiz. Verifica acceso, normativa, estado del mar y restricciones antes de desplazarte.</p>
+ <div id="zoneCards" class="zonecards"></div>
+ <a class="outline full" href="https://www.google.com/maps/search/?api=1&query=zonas+de+pesca+C%C3%A1diz" target="_blank" rel="noopener">Abrir zonas en Google Maps ↗</a>
+</section>
+
+<section id="diary" class="panel">
+ <div class="section-title"><div><small>05 / APRENDIZAJE</small><h2>Diario de jornadas</h2></div><span class="chip">Guardado local</span></div>
+ <p class="muted">Registra también las salidas sin capturas. Esos datos permitirán evaluar y calibrar el modelo en el futuro.</p>
+ <form id="logForm" class="form">
+  <label>Fecha<input type="date" id="logDate" required></label>
+  <label>Zona<select id="logZone"></select></label>
+  <div class="fieldrow"><label>Especie<select id="logFish"><option>Dorada</option><option>Lubina</option><option>Sargo</option><option>Baila</option><option>Herrera</option></select></label><label>Modalidad<select id="logMethod"><option>Surfcasting</option><option>Spinning</option><option>Boya</option><option>Pesca a fondo</option><option>Kayak</option><option>Embarcación</option></select></label></div>
+  <label>Capturas<input type="number" min="0" max="99" id="logCount" value="0" required></label>
+  <label>Observaciones<textarea id="logNotes" rows="3" placeholder="Hora, cebo, viento, estado del agua, tallas..."></textarea></label>
+  <button class="primary full">Guardar jornada</button>
+ </form>
+ <div class="section-title"><h2>Historial</h2><button class="textbutton" id="export">Exportar CSV</button></div><div id="history"></div>
+</section>
+
+<section id="settings" class="panel">
+ <div class="section-title"><div><small>06 / PERSONALIZACIÓN</small><h2>Tu perfil de pesca</h2></div></div>
+ <form id="profile" class="form">
+  <label>Radio de búsqueda<select id="radius"><option>Hasta 15 km</option><option>Hasta 30 km</option><option>Hasta 50 km</option><option>Toda la provincia de Cádiz</option></select></label>
+  <label>Especies objetivo</label><div id="fishChecks" class="checkgrid"></div>
+  <button class="primary full">Guardar perfil</button>
+ </form>
+ <div class="note"><b>Fuentes previstas para la siguiente integración:</b><br>AEMET (meteorología), Puertos del Estado (oleaje y corrientes), Instituto Hidrográfico de la Marina (mareas). Esta versión no consulta esas fuentes automáticamente.</div>
+ <div class="note"><b>Seguridad y normativa:</b> evita espigones expuestos con mar de fondo, respeta zonas portuarias y espacios protegidos, y consulta avisos oficiales y normativa andaluza vigente.</div>
+</section>
+</main>
+<footer>CFP · Cádiz Fishing Predictor · Versión 2.0 experimental</footer>
+<script src="app.js"></script>
+</body></html>

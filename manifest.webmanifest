@@ -1,0 +1,10 @@
+{
+  "name": "Cádiz Fishing Predictor",
+  "short_name": "CFP Cádiz",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#edf3f5",
+  "theme_color": "#082b43",
+  "lang": "es",
+  "description": "Predictor experimental y diario de pesca para Cádiz"
+}
